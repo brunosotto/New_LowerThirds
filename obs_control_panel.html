@@ -155,6 +155,21 @@
             gap: 6px;
         }
 
+        .panel-label-input {
+            background: transparent;
+            border: none;
+            color: inherit;
+            font-size: inherit;
+            font-weight: inherit;
+            padding: 0 4px;
+            min-width: 80px;
+            flex: 1;
+        }
+        .panel-label-input:focus {
+            outline: 1px solid rgba(59, 130, 246, 0.5);
+            border-radius: 4px;
+        }
+
         .panel-number {
             background: linear-gradient(135deg, #3b82f6, #9333ea);
             width: 20px;
@@ -692,7 +707,7 @@
                     <div class="panel-title">
                         <span class="drag-handle" draggable="true" data-panel-id="${id}">⋮⋮</span>
                         <div class="panel-number">${id}</div>
-                        <span>Lower Third ${id}</span>
+                        <input type="text" class="panel-label-input" id="panel-label-${id}" value="Lower Third ${id}" placeholder="Nome do painel">
                         <span class="status-indicator status-inactive" id="status-${id}"></span>
                     </div>
                     <div style="display: flex; gap: 8px; align-items: center;">
@@ -1026,8 +1041,10 @@
                 return;
             }
 
-            if (!name || !info) {
-                alert('Fill in Name and Title.');
+            const hasText = name?.trim() || info?.trim();
+            const hasLogo = logoEnabled && logoUrl?.trim();
+            if (!hasText && !hasLogo) {
+                alert('Preencha Name e Title, ou habilite um Logo.');
                 return;
             }
 
@@ -1038,8 +1055,8 @@
             sendToSource({
                 action: 'show',
                 id: id,
-                name: name,
-                info: info,
+                name: name || '',
+                info: info || '',
                 transition: transition,
                 animIn: animIn,
                 animOut: animOut,
@@ -1080,8 +1097,6 @@
         }
 
         function hideLowerThird(id) {
-            saveSettings(true);
-
             const animOut = parseFloat(document.getElementById(`anim-out-${id}`).value);
 
             sendToSource({
@@ -1341,8 +1356,10 @@
             const logoSizeEl = document.getElementById(`logo-size-${id}`);
             const logoPositionEl = document.getElementById(`logo-position-${id}`);
             const logoNoBoxEl = document.getElementById(`logo-no-box-${id}`);
+            const panelLabelEl = document.getElementById(`panel-label-${id}`);
 
             if (nameEl) panel.name = nameEl.value;
+            if (panelLabelEl) panel.panelLabel = panelLabelEl.value;
             if (infoEl) panel.info = infoEl.value;
             if (transitionEl) panel.transition = transitionEl.value;
             if (durationEl) panel.duration = durationEl.value;
@@ -1508,8 +1525,10 @@
             const logoSizeEl = document.getElementById(`logo-size-${id}`);
             const logoPositionEl = document.getElementById(`logo-position-${id}`);
             const logoNoBoxEl = document.getElementById(`logo-no-box-${id}`);
+            const panelLabelEl = document.getElementById(`panel-label-${id}`);
 
             if (nameEl && panel.name !== undefined) nameEl.value = panel.name;
+            if (panelLabelEl && panel.panelLabel !== undefined) panelLabelEl.value = panel.panelLabel;
             if (infoEl && panel.info !== undefined) infoEl.value = panel.info;
             if (transitionEl && panel.transition) transitionEl.value = panel.transition;
             if (durationEl && panel.duration !== undefined) durationEl.value = panel.duration;

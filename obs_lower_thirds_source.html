@@ -787,21 +787,32 @@
             void element.offsetWidth;
             element.classList.add('animation-in');
 
-            // Handle typewriter effect
-            if (typewriter) {
-                nameEl.innerHTML = '';
-                infoEl.innerHTML = '';
-
-                // Type out name first
-                typewriterEffect(nameEl, name, () => {
-                    // Then type out info after name is complete
-                    typewriterEffect(infoEl, info, () => {
-                        saveSourceState();
-                    });
-                });
+            // Mostrar/ocultar content-box (nome + título)
+            const hasText = (name && name.trim()) || (info && info.trim());
+            if (hasText) {
+                contentBox.style.display = '';
+                contentBox.classList.remove('content-box-hidden');
             } else {
-                nameEl.textContent = name;
-                infoEl.textContent = info;
+                contentBox.style.display = 'none';
+                contentBox.classList.add('content-box-hidden');
+            }
+
+            // Handle typewriter effect
+            if (hasText) {
+                if (typewriter) {
+                    nameEl.innerHTML = '';
+                    infoEl.innerHTML = '';
+                    typewriterEffect(nameEl, name || '', () => {
+                        typewriterEffect(infoEl, info || '', () => saveSourceState());
+                    });
+                } else {
+                    nameEl.textContent = name || '';
+                    infoEl.textContent = info || '';
+                    saveSourceState();
+                }
+            } else {
+                nameEl.textContent = '';
+                infoEl.textContent = '';
                 saveSourceState();
             }
         }
@@ -913,7 +924,9 @@
                 // Restore visible lower thirds
                 if (state.lowerThirds) {
                     for (const [id, data] of Object.entries(state.lowerThirds)) {
-                        if (data.visible && data.name && data.info) {
+                        const hasText = (data.name && data.name.trim()) || (data.info && data.info.trim());
+                        const hasLogo = data.logoEnabled && data.logoUrl;
+                        if (data.visible && (hasText || hasLogo)) {
                             // Restore the lower third without animation
                             const element = getOrCreateLowerThird(id);
                             const nameEl = document.getElementById(`name-${id}`);
@@ -974,6 +987,13 @@
                                 logoContainer.classList.add('hide');
                             }
 
+                            // Mostrar/ocultar content-box (logo-only)
+                            if (hasText) {
+                                contentBox.style.display = '';
+                            } else {
+                                contentBox.style.display = 'none';
+                            }
+
                             element.style.setProperty('--anim-in-duration', data.animIn);
                             element.style.setProperty('--anim-out-duration', data.animOut);
 
@@ -996,8 +1016,8 @@
                             element.classList.add(`transition-${data.transition}`);
 
                             // Set text content
-                            nameEl.textContent = data.name;
-                            infoEl.textContent = data.info;
+                            nameEl.textContent = data.name || '';
+                            infoEl.textContent = data.info || '';
 
                             // Make visible without animation
                             element.classList.remove('hide-anim');
