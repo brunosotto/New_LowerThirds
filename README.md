@@ -27,14 +27,22 @@ O servidor sobe em **http://localhost:3000**. Acesse:
 - **WebSocket:** comunicação em tempo real entre painel e source via servidor Node
 - **Persistência no servidor:** dados salvos em `data/panels.json` (JSON)
 - **Fallback para localStorage:** se o servidor não estiver disponível, usa armazenamento local
-- **Salvamento ao clicar Show/Hide:** dados gravados imediatamente
-- **Feedback visual:** toasts indicando salvamento e carregamento
+- **Salvamento ao clicar Show:** dados gravados imediatamente ao exibir
+
+### Painel de controle
+- **Layout compacto:** header, botões e timer na mesma linha quando configurações estão fechadas
+- **Arrastar para reordenar:** use o handle (⋮⋮) para reordenar os painéis
+- **Nome do painel editável:** exibido no header, edição em Settings
+- **Toggle e Delete em Settings:** Enable LT e Delete Panel dentro das configurações
+- **Opacidade reduzida:** painel desabilitado fica com aparência esmaecida
+- **Responsivo:** botões Add e Auto Sequence em largura total em telas pequenas
 
 ### Lower thirds
 - **Painéis dinâmicos:** adicionar ou remover painéis conforme necessário
+- **Show só com logo:** funciona sem nome/título quando um logo está habilitado
 - **11 animações:** Slide, Bounce, Fade, Swing, Flip, Elastic, Zoom, Rotate, Wave, Glitch, Curtain, Scroll
 - **Typewriter:** efeito de digitação no texto
-- **Timer automático:** duração configurável por painel
+- **Timer automático:** duração configurável por painel (exibido na mesma linha)
 
 ### Logos
 - **Suporte a logos:** arquivos locais (Browse) ou URLs
@@ -84,11 +92,12 @@ O servidor sobe em **http://localhost:3000**. Acesse:
 ```
 New_LowerThirds/
 ├── server.js              # Servidor Node/Express + WebSocket
-├── obs_control_panel.html  # Painel de controle
+├── obs_control_panel.html # Painel de controle
 ├── obs_lower_thirds_source.html  # Source para OBS
 ├── data/
-│   └── panels.json        # Dados persistidos (criado automaticamente)
+│   └── panels.json       # Dados persistidos (criado automaticamente, no .gitignore)
 ├── package.json
+├── .gitignore
 └── README.md
 ```
 
